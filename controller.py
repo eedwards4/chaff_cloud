@@ -24,14 +24,14 @@ class Bot:
         self.status = "running"
         if botType == 0:  # Start an address based bot
             try:
-                self.process = sp.Popen([sys.executable, "bot_templates/addressBot.py"], stdin=sp.PIPE)
+                self.process = sp.Popen([sys.executable, "bots/addressBot.py"], stdin=sp.PIPE)
             except Exception as e:
                 print("Error starting bot: {}".format(e))
                 self.status = "error"
                 return
         elif botType == 1:  # Start a search based bot
             try:
-                self.process = sp.Popen([sys.executable, "bot_templates/searchBot.py"], stdin=sp.PIPE)
+                self.process = sp.Popen([sys.executable, "bots/searchBot.py"], stdin=sp.PIPE)
             except Exception as e:
                 print("Error starting bot: {}".format(e))
                 self.status = "error"
