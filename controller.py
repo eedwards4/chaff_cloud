@@ -19,7 +19,7 @@ class Bot:
         self.verbose = _verbose
         self.botType = _type
         self.status = "idle"
-        self.name = "Bot{}".format(self.id)
+        self.name = "Bot {}".format(self.id)
         self.process = None
         self.monitor_thread = None
 
@@ -83,17 +83,17 @@ def main():
             else:
                 print("Invalid bot type!")
         elif line == "start":
-            target = input("Enter bot name: ")
+            target = input("Enter bot id: ")
             for bot in bots:
-                if bot.name == target:
+                if bot.id == target:
                     bot.start()
         elif line == "list":
             for bot in bots:
                 print("{} ({})".format(bot.name, bot.status))
         elif line == "kill":
-            target = input("Enter bot name: ")
+            target = input("Enter bot id: ")
             for bot in bots:
-                if bot.name == target:
+                if bot.id == target:
                     bot.kill()
         elif line == "quit":
             for bot in bots:
