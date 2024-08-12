@@ -56,3 +56,7 @@ class Bot:
             except sp.TimeoutExpired:
                 print("Unable to gracefully shut down {}, force killing...".format(self.name))
                 self.process.kill()
+            self.monitor_thread.join()
+            self.status = "killed"
+        else:
+            print("Bot {} has status: {}".format(self.name, self.status))
