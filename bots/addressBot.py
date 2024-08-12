@@ -44,7 +44,7 @@ class addressBot:
         if vb == 1:
             self.verbose = True
         # Output file
-        self.outFileName = "{}_output.txt".format(self.myId)
+        self.outFileName = "bots/logs/{}_output.txt".format(self.myId)
         self.outFile = open(self.outFileName, "w")
         # Input file
         self.urls = []
@@ -73,34 +73,33 @@ class addressBot:
         driver.get(url)
         title = driver.title
         url = driver.current_url
-        print("Accessing {} ({}) at {}".format(title, url, datetime.datetime.now()))
         self.outFile.write("Accessing {} ({}) at {}\n".format(title, url, datetime.datetime.now()))
 
         # Scroll down slowly (to imitate a human)
         total_height = int(driver.execute_script("return document.body.scrollHeight"))
         speed = 10
         for i in range(0, total_height, speed):
-            if i > 1000:  # Long page - stop scrolling
+            if i > 1000:  # Break on encountering a long page or kill signal
+                break
+            elif self.sigExit.acquire(blocking=False):
+                self.sigExit.release()
                 break
             driver.execute_script("window.scrollTo(0, {});".format(i))
             time.sleep(0.2)
 
     def work(self):
-        print("Started at: {}".format(datetime.datetime.now()))
         self.outFile.write("Started at: {}\n".format(datetime.datetime.now()))
 
         for url in self.urls:
-            if self.sigExit.acquire(blocking=False):
-                break
             self.get_url(url)
+            if self.sigExit.acquire(blocking=False):  # Check for kill signal
+                break
             random.seed(time.time())
             wait_time = random.randint(10, 30)
             if self.verbose:
-                print("Waiting for {} seconds".format(wait_time))
                 self.outFile.write("Waiting for {} seconds\n".format(wait_time))
             time.sleep(wait_time)
 
-        print("Stopped at: {}".format(datetime.datetime.now()))
         self.outFile.write("Stopped at: {}\n".format(datetime.datetime.now()))
         self.outFile.close()
         driver.quit()
